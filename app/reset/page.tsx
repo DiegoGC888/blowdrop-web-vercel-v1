@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function ResetPasswordPage() {
-  const [token, setToken] = useState("");
   const [email, setEmail] = useState("");
   const [emailValid, setEmailValid] = useState(false);
   const [newPassword, setNewPassword] = useState("");
@@ -13,13 +12,16 @@ export default function ResetPasswordPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
+  const tokenRef = useRef<string>("");
 
   // ✅ Extraer el token desde los parámetros de la URL (?token=...)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const paramToken = urlParams.get("refresh_token");
     if (paramToken) {
-      setToken(paramToken);
+      tokenRef.current = paramToken;
+
+    alert("Token recibido desde URL: " + paramToken); // 👈 ALERT al cargar la página  
     }
   }, []);
 
@@ -60,7 +62,7 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!token) return setMessage("Token no válido o expirado.");
+    if (!tokenRef.current) return setMessage("Token no válido o expirado.");
 
     setLoading(true);
     setMessage("🔄 Actualizando contraseña...");
@@ -73,7 +75,7 @@ export default function ResetPasswordPage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, token, newPassword }),
+          body: JSON.stringify({ email, token: tokenRef.current, newPassword }),
         }
       );
 
