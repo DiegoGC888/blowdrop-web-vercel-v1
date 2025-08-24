@@ -16,12 +16,12 @@ export default function ResetPasswordPage() {
 
   // ✅ Extraer el token desde los parámetros de la URL (?token=...)
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const paramToken = urlParams.get("refresh_token");
+    const hash = window.location.hash.substring(1); // quitamos el "#"
+    const hashParams = new URLSearchParams(hash);
+
+    const paramToken = hashParams.get("refresh_token");
     if (paramToken) {
       tokenRef.current = paramToken;
-
-    alert("Token recibido desde URL: " + tokenRef.current); // 👈 ALERT al cargar la página  
     }
   }, []);
 
