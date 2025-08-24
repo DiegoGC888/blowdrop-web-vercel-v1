@@ -21,7 +21,7 @@ export default function ResetPasswordPage() {
     if (paramToken) {
       tokenRef.current = paramToken;
 
-    alert("Token recibido desde URL: " + paramToken); // 👈 ALERT al cargar la página  
+    alert("Token recibido desde URL: " + tokenRef.current); // 👈 ALERT al cargar la página  
     }
   }, []);
 
@@ -62,6 +62,9 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    alert("Token recibido desde URL: " + tokenRef.current); // 👈 ALERT al cargar la página  
+
     if (!tokenRef.current) return setMessage("Token no válido o expirado.");
 
     setLoading(true);
