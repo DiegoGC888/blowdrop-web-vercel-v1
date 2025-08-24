@@ -17,7 +17,7 @@ export default function ResetPasswordPage() {
   // ✅ Extraer el token desde los parámetros de la URL (?token=...)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const paramToken = urlParams.get("access_token");
+    const paramToken = urlParams.get("refresh_token");
     if (paramToken) {
       setToken(paramToken);
     }
