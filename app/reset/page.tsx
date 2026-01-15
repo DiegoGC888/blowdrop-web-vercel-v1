@@ -12,17 +12,23 @@ export default function ResetPasswordPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
-  const tokenRef = useRef<string>("");
+  const Access_TokenRef = useRef<string>("");
+  const Refresh_TokenRef = useRef<string>("");
 
   // ✅ Extraer el token desde los parámetros de la URL (?token=...)
   useEffect(() => {
     const hash = window.location.hash.substring(1); // quitamos el "#"
     const hashParams = new URLSearchParams(hash);
 
-    const paramToken = hashParams.get("refresh_token");
-    if (paramToken) {
-      tokenRef.current = paramToken;
+    const paramAccess_Token = hashParams.get("access_token");
+    const paramRefresh_Token = hashParams.get("refresh_token");
+    if (paramAccess_Token) {
+      Access_TokenRef.current = paramAccess_Token;
     }
+
+    if (paramRefresh_Token) {
+      Refresh_TokenRef.current = paramRefresh_Token;
+    }    
   }, []);
 
   const contieneNumerosConsecutivos = (pwd: string) => {
@@ -63,7 +69,8 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!tokenRef.current) return setMessage("Token no válido o expirado.");
+    if (!Access_TokenRef.current) return setMessage("Access_Token no válido o expirado.");
+    if (!Refresh_TokenRef.current) return setMessage("Refresh_Token no válido o expirado.");
 
     setLoading(true);
     setMessage("🔄 Actualizando contraseña...");
@@ -76,7 +83,7 @@ export default function ResetPasswordPage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, token: tokenRef.current, newPassword }),
+          body: JSON.stringify({ email, access_token: Access_TokenRef.current, refresh_token: Refresh_TokenRef.current, newPassword }),
         }
       );
 
